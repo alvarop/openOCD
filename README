@@ -1,0 +1,23 @@
+OpenOCD
+
+These are the openOCD configuration files I've been using with my BusBlaster and LPC1769.
+
+To use:
+$ openocd -f openocd.cfg
+
+Then (from a different terminal window):
+$ telnet localhost 4444
+> lpcflash path/to/program.bin
+
+
+Disclaimers/Notes:
+* This isn't perfect, actually, it barely works at the moment.
+* The Bus Blaster is using the KT-Link buffer
+* I had to disable the verify_image part of the script. For some reason, 4 bytes(or was it words?) in the interrupt vector table don't seem to get programmed correctly. It works ok, since they're reserved, but the verify failure crashes the script for some reason.
+* When I do a flash write_image erase $filename for the first time, everything gets erased, but not programmed, so I do everything twice. I suspect this has to do with [1], but I haven't figured it out yet
+* On the LPCXpresso LPC1769 (Schematic in [2]), It seems R32 is unpopulated, so the reset line never changes. I just shorted it out and things started working better. It's to the left of R31, on the 'bottom left' of the board.
+* The lpc1769.cfg is a clone of lpc1768.cfg that came with openOCD. The only difference between the two seems to be max clock speed, so it shouldn't make a difference.
+
+
+[1] - https://forum.sparkfun.com/viewtopic.php?f=18&t=31376
+[2] - http://ics.nxp.com/support/documents/microcontrollers/pdf/lpcxpresso.lpc1769.schematic.pdf
